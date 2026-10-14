@@ -1,0 +1,14 @@
+{
+  "name": "qr-studio",
+  "version": "1.0.0",
+  "description": "A responsive QR code generator for URLs, text, Wi-Fi, phone, email, and contact cards.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "qr-image": "^3.2.0"
+  }
+}

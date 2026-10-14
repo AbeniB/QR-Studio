@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f8fc">
+  <meta name="description" content="Create and download QR codes for websites, text, Wi-Fi, phone numbers, email, and contact cards.">
+  <title>QR Studio — QR Code Generator</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="QR Studio home">
+        <span class="brand-mark" aria-hidden="true">▦</span>
+        <span>QR Studio</span>
+      </a>
+      <span class="header-note">Free QR code generator</span>
+    </header>
+
+    <section class="intro">
+      <p class="eyebrow">SIMPLE · FAST · USEFUL</p>
+      <h1>Make a QR code<br><span>for anything.</span></h1>
+      <p class="intro-copy">Create a scannable code for a website, text, Wi-Fi network, phone number, email, or contact card. Preview it and download it as a PNG.</p>
+    </section>
+
+    <section class="workspace" aria-label="QR code generator">
+      <div class="form-panel">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">CREATE YOUR CODE</p>
+            <h2>What do you want to share?</h2>
+          </div>
+        </div>
+
+        <div class="type-tabs" role="tablist" aria-label="QR code type">
+          <button type="button" class="type-tab active" data-type="url" role="tab" aria-selected="true">Website</button>
+          <button type="button" class="type-tab" data-type="text" role="tab" aria-selected="false">Text</button>
+          <button type="button" class="type-tab" data-type="wifi" role="tab" aria-selected="false">Wi-Fi</button>
+          <button type="button" class="type-tab" data-type="phone" role="tab" aria-selected="false">Phone</button>
+          <button type="button" class="type-tab" data-type="email" role="tab" aria-selected="false">Email</button>
+          <button type="button" class="type-tab" data-type="vcard" role="tab" aria-selected="false">Contact</button>
+        </div>
+
+        <form id="qrForm">
+          <div class="fields active" data-fields="url">
+            <label for="url">Website URL</label>
+            <input id="url" name="url" type="text" inputmode="url" autocomplete="url" placeholder="example.com">
+            <p class="field-hint">You can enter a URL with or without https://.</p>
+          </div>
+
+          <div class="fields" data-fields="text" hidden>
+            <label for="text">Your text</label>
+            <textarea id="text" name="text" rows="4" maxlength="2500" placeholder="Type a message, instructions, or any text..."></textarea>
+            <p class="field-hint">Up to 2,500 characters.</p>
+          </div>
+
+          <div class="fields" data-fields="wifi" hidden>
+            <label for="ssid">Wi-Fi network name (SSID)</label>
+            <input id="ssid" name="ssid" type="text" autocomplete="off" placeholder="e.g. Office Wi-Fi">
+            <label for="security">Security type</label>
+            <select id="security" name="security">
+              <option value="WPA">WPA / WPA2 / WPA3</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">Open network (no password)</option>
+            </select>
+            <div id="wifiPasswordWrap">
+              <label for="password">Wi-Fi password</label>
+              <input id="password" name="password" type="password" autocomplete="new-password" placeholder="Enter network password">
+            </div>
+            <p class="field-hint">Anyone who can scan this code may be able to join the network. Only share it with people you trust.</p>
+          </div>
+
+          <div class="fields" data-fields="phone" hidden>
+            <label for="phone">Phone number</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+251 911 123 456">
+            <p class="field-hint">Scanning the code can offer to call this number.</p>
+          </div>
+
+          <div class="fields" data-fields="email" hidden>
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="hello@example.com">
+            <label for="subject">Email subject <span class="optional">(optional)</span></label>
+            <input id="subject" name="subject" type="text" placeholder="Subject">
+            <label for="message">Message <span class="optional">(optional)</span></label>
+            <textarea id="message" name="message" rows="3" placeholder="Write a message..."></textarea>
+          </div>
+
+          <div class="fields" data-fields="vcard" hidden>
+            <label for="name">Full name</label>
+            <input id="name" name="name" type="text" autocomplete="name" placeholder="Abebe Kebede">
+            <label for="organization">Organization <span class="optional">(optional)</span></label>
+            <input id="organization" name="organization" type="text" autocomplete="organization" placeholder="Company or organization">
+            <label for="contactPhone">Phone number <span class="optional">(optional)</span></label>
+            <input id="contactPhone" name="contactPhone" type="tel" autocomplete="tel" placeholder="+251 911 123 456">
+            <label for="contactEmail">Email address <span class="optional">(optional)</span></label>
+            <input id="contactEmail" name="contactEmail" type="email" autocomplete="email" placeholder="name@example.com">
+            <p class="field-hint">A compatible phone may offer to save this as a contact.</p>
+          </div>
+
+          <div class="form-actions">
+            <button class="button button-primary" id="generateButton" type="submit"><span aria-hidden="true">▦</span> Generate QR code</button>
+            <button class="button button-secondary" id="resetButton" type="button">Clear</button>
+          </div>
+          <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <aside class="preview-panel" aria-label="QR code preview">
+        <div class="preview-top">
+          <div>
+            <p class="eyebrow">YOUR RESULT</p>
+            <h2>QR preview</h2>
+          </div>
+          <span class="preview-status" id="previewStatus">Waiting for input</span>
+        </div>
+        <div class="qr-stage" id="qrStage">
+          <div class="empty-state" id="emptyState">
+            <div class="empty-icon" aria-hidden="true">▦</div>
+            <strong>Your QR code will appear here</strong>
+            <p>Choose a type, enter your information, and select Generate.</p>
+          </div>
+          <img id="qrImage" alt="Generated QR code" hidden>
+        </div>
+        <div class="preview-caption" id="previewCaption">Your generated code will be shown here.</div>
+        <a class="button button-download" id="downloadButton" download="qr-code.png" href="#" aria-disabled="true">Download PNG</a>
+        <p class="privacy-note"><span aria-hidden="true">🔒</span> QR content is generated by this app's server and is not saved to a database.</p>
+      </aside>
+    </section>
+
+    <section class="how-it-works">
+      <div class="how-item"><span>01</span><div><strong>Choose a type</strong><p>Pick the information you want to share.</p></div></div>
+      <div class="how-item"><span>02</span><div><strong>Generate</strong><p>Preview your QR code before using it.</p></div></div>
+      <div class="how-item"><span>03</span><div><strong>Download and scan</strong><p>Save the PNG and test it with your phone.</p></div></div>
+    </section>
+
+    <footer>QR Studio <span>·</span> Make information easier to share.</footer>
+  </main>
+</body>
+</html>
